@@ -1,0 +1,20 @@
+{
+  "name": "DailyMonitoring",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "cross-env NODE_ENV=development nodemon bin/www --watch server"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "cors": "^2.8.5",
+    "morgan": "~1.9.1",
+    "nuxt": "^2.14.5",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "nodemon": "^2.0.3"
+  }
+}
