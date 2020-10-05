@@ -2,24 +2,21 @@
   Connexion à la bdd MySQL
 */
 
-const mysql = require("mysql");
+const { Sequelize } = require('sequelize');
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "tx52",
+const connection = new Sequelize('tx52', 'root', '', {
+  host: 'localhost',
+  dialect: 'mysql'
 });
 
-connection.connect(function (err) {
-  if (err) {
-    throw err;
-  } else {
-    console.log("info", "Connected to MySQL DB");
-  }
-});
+try {
+  connection.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}
 
 module.exports = {
-  mysql,
+  Sequelize,
   connection,
 };
