@@ -18,19 +18,36 @@ function getAllQuestions(req, callback) {
 }
 
 function updateQuestion(req, callback) {
-  let updateQuestion = "UPDATE question q SET " +
-                       "question = " + mysql.escape(req.body.question) + " " +
-                       "WHERE q.num_question = " + mysql.escape(req.body.questionId)
+  let checkQuestion = "SELECT * FROM question q " +
+                      "WHERE q.question = " + mysql.escape(req.body.questionLib.trim()) + " " +
+                      "AND q.num_question <> " + mysql.escape(req.body.questionId)
 
-  connection.query(updateQuestion, function (err, result, fields) {
-    if (err) {
-      console.log(err)
-      callback(err.sqlMessage, null)
-    }
-    else {
-      console.log(result.protocol41)
-      callback(null, result)
-    }
+  connection.query(checkQuestion, function (err, result, fields) {
+      if (err) {
+        console.log(err)
+        callback(err.sqlMessage, null)
+      }
+      else {
+        if (result.length != 0) {
+          callback("Cette question existe déjà.", null);
+        }
+        else {
+          let updateQuestion = "UPDATE question q SET " +
+                               "question = " + mysql.escape(req.body.question) + " " +
+                               "WHERE q.num_question = " + mysql.escape(req.body.questionId)
+
+          connection.query(updateQuestion, function (err, result, fields) {
+            if (err) {
+              console.log(err)
+              callback(err.sqlMessage, null)
+            }
+            else {
+              console.log(result.protocol41)
+              callback(null, result.protocol41)
+            }
+          })
+        }
+      }
   })
 }
 
