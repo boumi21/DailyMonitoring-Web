@@ -20,9 +20,15 @@ app.use(logger("dev"));
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(express.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.use("/", indexRouter);
 app.use("/response", responseRouter);
 app.use("/question", questionRouter);
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
