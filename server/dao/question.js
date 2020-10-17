@@ -71,7 +71,7 @@ function getNextQuestion(req, callback) {
 }
 
 function getQRNQ(req, callback) {
-  let getQRNQ = "SELECT q.num_question, q.question, r.num_reponse, r.reponse, p.num_question_suivante, pq.question FROM question q " +
+  let getQRNQ = "SELECT q.num_question, q.question, r.num_reponse, r.reponse, p.num_question_suivante, pq.question as question_suivante FROM question q " +
                 "LEFT JOIN possede p " +
                 "ON q.num_question = p.num_question " +
                 "LEFT JOIN reponse r " +
