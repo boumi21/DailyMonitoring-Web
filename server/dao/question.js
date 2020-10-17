@@ -37,7 +37,7 @@ function updateQuestion(req, callback) {
 function getNextQuestion(req, callback) {
   let getNextQuestion = "SELECT q.* FROM question q " +
                         "LEFT JOIN possede p " +
-                        "ON q.num_question = p.num_question " +
+                        "ON q.num_question = p.num_question_suivante " +
                         "WHERE p.num_question = " + mysql.escape(req.body.questionId) + " " +
                         "AND p.num_reponse = " + mysql.escape(req.body.reponseId)
 
@@ -54,7 +54,7 @@ function getNextQuestion(req, callback) {
 }
 
 function getQRNQ(req, callback) {
-  let getQRNQ = "SELECT q.num_question, q.question, r.num_reponse, r.reponse, p.num_prochaine_question, pq.question FROM question q " +
+  let getQRNQ = "SELECT q.num_question, q.question, r.num_reponse, r.reponse, p.num_question_suivante, pq.question FROM question q " +
                 "LEFT JOIN possede p " +
                 "ON q.num_question = p.num_question " +
                 "LEFT JOIN reponse r " +
