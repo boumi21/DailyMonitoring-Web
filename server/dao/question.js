@@ -36,9 +36,9 @@ function updateQuestion(req, callback) {
 
 function getNextQuestion(req, callback) {
   let getNextQuestion = "SELECT question.* FROM question " +
-                        "INNER JOIN possede " +
-                        "WHERE question.num_question = possede.num_question " +
-                        "AND possede.num_question = " + mysql.escape(req.body.questionId) + " " +
+                        "LEFT JOIN possede " +
+                        "ON question.num_question = possede.num_question " +
+                        "WHERE possede.num_question = " + mysql.escape(req.body.questionId) + " " +
                         "AND possede.num_reponse = " + mysql.escape(req.body.reponseId)
 
   connection.query(getNextQuestion, function (err, result, fields) {
@@ -55,11 +55,11 @@ function getNextQuestion(req, callback) {
 
 function getQR(req, callback) {
   let getQR = "SELECT question.*, reponse.* FROM question " +
-              "INNER JOIN possede " +
-              "INNER JOIN reponse " +
-              "WHERE question.num_question = possede.num_question " +
-              "AND possede.num_reponse = reponse.num_reponse " +
-              "AND question.num_question = " + mysql.escape(req.body.questionId)
+              "LEFT JOIN possede " +
+              "ON question.num_question = possede.num_question " +
+              "LEFT JOIN reponse " +
+              "ON possede.num_reponse = reponse.num_reponse " +
+              "WHERE question.num_question = " + mysql.escape(req.body.questionId)
 
   connection.query(getQR, function (err, result, fields) {
     if (err) {
@@ -73,9 +73,42 @@ function getQR(req, callback) {
   })      
 }
 
+function setQuestion(req, callback) {
+  let checkQuestion = "SELECT * FROM question " +
+                      "WHERE question.question = " + mysql.escape(req.body.questionLib.trim())
+
+  connection.query(checkQuestion, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      if (result.length != 0) {
+        callback("Cette question existe déjà.", null);
+      }
+      else {
+        let setQuestion = "INSERT INTO question " +
+                          "(question) VALUES ?"
+        let value = [[req.body.questionLib.trim()]]
+
+        connection.query(setQuestion, [value], function (err, result, fields) {
+          if (err) {
+            console.log(err)
+            callback(err.sqlMessage, null)
+          }
+          else {
+            callback(null, result)
+          }
+        })
+      }
+    }
+  })
+}
+
 module.exports = {
   getAllQuestions,
   updateQuestion,
   getNextQuestion,
-  getQR
+  getQR,
+  setQuestion
 }

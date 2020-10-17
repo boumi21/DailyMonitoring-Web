@@ -45,7 +45,7 @@ export default {
 
     // Récupère le type de la soirée (pro ou non)
     let result = await QuestionService.getQR({
-      questionId: 2 //this.$route.params.id
+      questionId: this.$route.params.id
     });
     let question = result.data[0].question;
     // Décode l'image de la bdd
