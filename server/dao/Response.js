@@ -3,8 +3,8 @@ const database = require("../database/Database.js")
 const mysql = database.mysql;
 const connection = database.connection;
 
-function getAllReponses(req, callback) {
-  let getAllReponses = 'SELECT * FROM reponse'
+function getAllResponses(req, callback) {
+  let getAllResponses = 'SELECT * FROM reponse'
   connection.query(getAllResponses, function (err, result, fields) {
     if (err) {
       console.log(err)

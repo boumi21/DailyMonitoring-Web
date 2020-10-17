@@ -6,7 +6,6 @@ var logger = require("morgan");
 const bodyParser = require("body-parser");
 
 var indexRouter = require("./routes/index");
-var reponseRouter = require("./routes/reponse");
 var responseRouter = require("./routes/response");
 var questionRouter = require("./routes/question");
 

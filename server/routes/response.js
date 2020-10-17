@@ -1,5 +1,5 @@
 const express = require("express")
-const reponse = require("../dao/Reponse.js")
+const reponse = require("../dao/Response.js")
 const router = express.Router();
 
 router.post("/getAllResponses", function (req, res) {
