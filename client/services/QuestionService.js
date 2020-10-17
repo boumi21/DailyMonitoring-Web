@@ -16,5 +16,9 @@ export default {
 
   getQR(credentials) {
     return api().post('question/getQR', credentials)
+  },
+
+  setQuestion(credentials) {
+    return api().post('question/setQuestion', credentials)
   }
 }

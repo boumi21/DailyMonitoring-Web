@@ -20,14 +20,14 @@ function getAllResponses(req, callback) {
 
 function getResponses(req, callback) {
   let getResponses = "SELECT * FROM reponse " +
-                     "INNER JOIN possede " +
-                     "WHERE reponse.num_reponse = possede.num_reponse " +
-                     "AND possede.num_question = " + mysql.escape(req.body.questionId)
+                     "LEFT JOIN possede " +
+                     "ON reponse.num_reponse = possede.num_reponse " +
+                     "WHERE possede.num_question = " + mysql.escape(req.body.questionId)
 
   connection.query(getResponses, function (err, result, fields) {
     if (err) {
       console.log(err)
-      callaback(err.sqlMessage, null)
+      callback(err.sqlMessage, null)
     }
     else {
       console.log(result)
@@ -36,7 +36,40 @@ function getResponses(req, callback) {
   })
 }
 
+function setResponse(req, callback) {
+  let checkResponse = "SELECT * FROM reponse " +
+    "WHERE reponse.reponse = " + mysql.escape(req.body.reponse.trim())
+
+  connection.query(checkResponse, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      if (result.length != 0) {
+        callback("Cette réponse existe déjà.", null);
+      }
+      else {
+        let setResponse = "INSERT INTO reponse " +
+          "(reponse) VALUES ?"
+        let value = [[req.body.reponseLib.trim()]]
+
+        connection.query(setResponse, [value], function (err, result, fields) {
+          if (err) {
+            console.log(err)
+            callback(err.sqlMessage, null)
+          }
+          else {
+            callback(null, result)
+          }
+        })
+      }
+    }
+  })
+}
+
 module.exports = {
   getAllResponses,
-  getResponses
+  getResponses,
+  setResponse
 }
