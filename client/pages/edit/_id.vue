@@ -1,30 +1,35 @@
 <template>
-  <v-layout>
-    <v-flex class="text-center">
-      <img
-        src="/v.png"
-        alt="Vuetify.js"
-        class="mb-5"
+  <v-row
+
+      justify="space-between"
+    >
+      <v-col
+        cols="12"
+        md="4"
       >
-      <blockquote class="blockquote">
-        &#8220;Page d'edit.&#8221;
-        <footer>
-          <small>
-            <em>&mdash;John Johnson</em>
-          </small>
-        </footer>
-      </blockquote>
-    </v-flex>
-  </v-layout>
+        <v-form ref="form">
+          <v-text-field
+            v-model="form.question"
+            
+            label="First name"
+          ></v-text-field>
+        </v-form>
+      </v-col>
+
+      
+    </v-row>
 </template>
 
 
 <script>
+import QuestionService from "@/services/QuestionService.js";
 
 export default {
   data() {
     return {
-
+      form: {
+        question: ''
+      },
     };
   },
   methods: {
@@ -36,7 +41,15 @@ export default {
   },
 
   async mounted() {
+    //let resultQuestion;
 
+    // Récupère le type de la soirée (pro ou non)
+    let result = await QuestionService.getQR({
+      questionId: 2 //this.$route.params.id
+    });
+    let question = result.data[0].question;
+    // Décode l'image de la bdd
+    this.form.question = question;
   }
 };
 
