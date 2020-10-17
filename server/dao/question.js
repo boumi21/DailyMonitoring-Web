@@ -4,7 +4,7 @@ const mysql = database.mysql;
 const connection = database.connection;
 
 function getAllQuestions(req, callback) {
-  let getAllQuestions = "SELECT * FROM question"
+  let getAllQuestions = "SELECT * FROM question q "
   connection.query(getAllQuestions, function (err, result, fields) {
     if (err) {
       console.log(err)
@@ -18,9 +18,9 @@ function getAllQuestions(req, callback) {
 }
 
 function updateQuestion(req, callback) {
-  let updateQuestion = "UPDATE question SET " +
+  let updateQuestion = "UPDATE question q SET " +
                        "question = " + mysql.escape(req.body.question) + " " +
-                       "WHERE question.num_question = " + mysql.escape(req.body.questionId)
+                       "WHERE q.num_question = " + mysql.escape(req.body.questionId)
 
   connection.query(updateQuestion, function (err, result, fields) {
     if (err) {
@@ -35,11 +35,11 @@ function updateQuestion(req, callback) {
 }
 
 function getNextQuestion(req, callback) {
-  let getNextQuestion = "SELECT question.* FROM question " +
-                        "LEFT JOIN possede " +
-                        "ON question.num_question = possede.num_question " +
-                        "WHERE possede.num_question = " + mysql.escape(req.body.questionId) + " " +
-                        "AND possede.num_reponse = " + mysql.escape(req.body.reponseId)
+  let getNextQuestion = "SELECT q.* FROM question q " +
+                        "LEFT JOIN possede p " +
+                        "ON q.num_question = p.num_question " +
+                        "WHERE p.num_question = " + mysql.escape(req.body.questionId) + " " +
+                        "AND p.num_reponse = " + mysql.escape(req.body.reponseId)
 
   connection.query(getNextQuestion, function (err, result, fields) {
     if (err) {
@@ -53,15 +53,17 @@ function getNextQuestion(req, callback) {
   })
 }
 
-function getQR(req, callback) {
-  let getQR = "SELECT question.*, reponse.* FROM question " +
-              "LEFT JOIN possede " +
-              "ON question.num_question = possede.num_question " +
-              "LEFT JOIN reponse " +
-              "ON possede.num_reponse = reponse.num_reponse " +
-              "WHERE question.num_question = " + mysql.escape(req.body.questionId)
+function getQRNQ(req, callback) {
+  let getQRNQ = "SELECT q.num_question, q.question, r.num_reponse, r.reponse, p.num_prochaine_question, pq.question FROM question q " +
+                "LEFT JOIN possede p " +
+                "ON q.num_question = p.num_question " +
+                "LEFT JOIN reponse r " +
+                "ON p.num_reponse = r.num_reponse " +
+                "LEFT JOIN question pq " +
+                "ON p.num_prochaine_question = pq.num_question " +
+                "WHERE q.num_question = " + mysql.escape(req.body.questionId)
 
-  connection.query(getQR, function (err, result, fields) {
+  connection.query(getQRNQ, function (err, result, fields) {
     if (err) {
       console.log(err)
       callback(err.sqlMessage, null)
@@ -74,8 +76,8 @@ function getQR(req, callback) {
 }
 
 function setQuestion(req, callback) {
-  let checkQuestion = "SELECT * FROM question " +
-                      "WHERE question.question = " + mysql.escape(req.body.questionLib.trim())
+  let checkQuestion = "SELECT * FROM question q " +
+                      "WHERE q.question = " + mysql.escape(req.body.questionLib.trim())
 
   connection.query(checkQuestion, function (err, result, fields) {
     if (err) {
@@ -109,6 +111,6 @@ module.exports = {
   getAllQuestions,
   updateQuestion,
   getNextQuestion,
-  getQR,
+  getQRNQ,
   setQuestion
 }

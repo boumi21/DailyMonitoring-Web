@@ -41,8 +41,8 @@ router.post("/getNextQuestion", function (req, res) {
   })
 })
 
-router.post("/getQR", function (req, res) {
-  question.getQR(req, function callback(err, result) {
+router.post("/getQRNQ", function (req, res) {
+  question.getQRNQ(req, function callback(err, result) {
     if (err != null) {
       res.send({
         error: err
