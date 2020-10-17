@@ -8,9 +8,5 @@ export default {
 
   getResponses(credentials) {
     return api().post('response/getResponses', credentials)
-  },
-
-  setResponse(credentials) {
-    return api().post('response/setResponse', credentials)
   }
 }

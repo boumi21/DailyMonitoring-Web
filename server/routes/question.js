@@ -40,22 +40,8 @@ router.post("/getNextQuestion", function (req, res) {
     }
   })
 })
-
 router.post("/getQR", function (req, res) {
   question.getQR(req, function callback(err, result) {
-    if (err != null) {
-      res.send({
-        error: err
-      })
-    }
-    else {
-      res.send(result)
-    }
-  })
-})
-
-router.post("/setQuestion", function (req, res) {
-  question.setQuestion(req, function callback(err, result) {
     if (err != null) {
       res.send({
         error: err
