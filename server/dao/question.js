@@ -60,7 +60,7 @@ function getQRNQ(req, callback) {
                 "LEFT JOIN reponse r " +
                 "ON p.num_reponse = r.num_reponse " +
                 "LEFT JOIN question pq " +
-                "ON p.num_prochaine_question = pq.num_question " +
+                "ON p.num_question_suivante = pq.num_question " +
                 "WHERE q.num_question = " + mysql.escape(req.body.questionId)
 
   connection.query(getQRNQ, function (err, result, fields) {
