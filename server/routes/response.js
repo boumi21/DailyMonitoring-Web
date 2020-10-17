@@ -54,4 +54,30 @@ router.post("/setResponse", function (req, res) {
   })
 })
 
+router.post("/updateResponse", function (req, res) {
+  response.updateResponse(req, function callback(err, result) {
+    if (err != null) {
+      res.send({
+        error: err
+      })
+    }
+    else {
+      res.send(result)
+    }
+  })
+})
+
+router.post("/deleteResponse", function (req, res) {
+  response.deleteResponse(req, function callback(err, result) {
+    if (err != null) {
+      res.send({
+        error: err
+      })
+    }
+    else {
+      res.send(result)
+    }
+  })
+})
+
 module.exports = router;

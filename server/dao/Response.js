@@ -68,8 +68,72 @@ function setResponse(req, callback) {
   })
 }
 
+function updateResponse(req, callback) {
+  let checkResponse = "SELECT * FROM reponse r " +
+    "WHERE r.reponse = " + mysql.escape(req.body.reponseLib.trim()) + " " +
+    "AND r.num_reponse <> " + mysql.escape(req.body.reponseId)
+
+  connection.query(checkResponse, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      if (result.length != 0) {
+        callback("Cette réponse existe déjà.", null);
+      }
+      else {
+        let updateResponse = "UPDATE reponse r SET " +
+          "reponse = " + mysql.escape(req.body.reponse) + " " +
+          "WHERE r.num_reponse = " + mysql.escape(req.body.reponseId)
+
+        connection.query(updateResponse, function (err, result, fields) {
+          if (err) {
+            console.log(err)
+            callback(err.sqlMessage, null)
+          }
+          else {
+            console.log(result.protocol41)
+            callback(null, result.protocol41)
+          }
+        })
+      }
+    }
+  })
+}
+
+function deleteResponse(req, callback) {
+  let deletePossede = "DELETE FROM possede " +
+    "WHERE num_reponse = " + mysql.escape(req.body.reponseId)
+
+  connection.query(deletePossede, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      console.log(result)
+      let deleteResponse = "DELETE FROM reponse " +
+        "WHERE num_reponse = " + mysql.escape(req.body.reponseId)
+
+      connection.query(deleteResponse, function (err, result, fields) {
+        if (err) {
+          console.log(err)
+          callback(err.sqlMessage, null)
+        }
+        else {
+          console.log(result)
+          callback(null, result)
+        }
+      })
+    }
+  })
+}
+
 module.exports = {
   getAllResponses,
   getResponses,
-  setResponse
+  setResponse,
+  updateResponse,
+  deleteResponse
 }

@@ -12,5 +12,13 @@ export default {
 
   setResponse(credentials) {
     return api().post('response/setResponse', credentials)
+  },
+
+  updateResponse(credentials) {
+    return api().post('response/updateResponse', credentials)
+  },
+
+  deleteResponse(credentials) {
+    return api().post('response/deleteResponse', credentials)
   }
 }

@@ -67,4 +67,17 @@ router.post("/setQuestion", function (req, res) {
   })
 })
 
+router.post("/deleteQuestion", function (req, res) {
+  question.deleteQuestion(req, function callback(err, result) {
+    if (err != null) {
+      res.send({
+        error: err
+      })
+    }
+    else {
+      res.send(result)
+    }
+  })
+})
+
 module.exports = router;

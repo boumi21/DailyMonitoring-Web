@@ -124,10 +124,40 @@ function setQuestion(req, callback) {
   })
 }
 
+function deleteQuestion(req, callback) {
+  let updatePossede = "UPDATE possede p " +
+    "SET p.num_question_suivante = NULL " +
+    "WHERE p.num_question_suivante = " + req.body.questionId
+
+  connection.query(updatePossede, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      console.log(result.protocol41)
+      let deleteQuestion = "DELETE FROM question " +
+                           "WHERE num_question = " + mysql.escape(req.body.questionId)
+
+      connection.query(deleteQuestion, function (err, result, fields) {
+        if (err) {
+          console.log(err)
+          callback(err.sqlMessage, null)
+        }
+        else {
+          console.log(result)
+          callback(null, result)
+        }
+      })
+    }
+  })
+}
+
 module.exports = {
   getAllQuestions,
   updateQuestion,
   getNextQuestion,
   getQRNQ,
-  setQuestion
+  setQuestion,
+  deleteQuestion
 }
