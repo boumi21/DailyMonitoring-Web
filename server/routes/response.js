@@ -15,4 +15,17 @@ router.post("/getAllResponses", function (req, res) {
   })
 })
 
+router.post("/getResponses", function (req, res) {
+  reponse.getResponses(req, function callback(err, result) {
+    if (err != null) {
+      res.send({
+        error: err
+      })
+    }
+    else {
+      res.send(result)
+    }
+  })
+})
+
 module.exports = router;
