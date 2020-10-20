@@ -38,7 +38,7 @@
             <td><v-autocomplete
               auto-select-first
               clearable
-              v-bind:value="form.allResponses[item.numResponse-1].numResponse"
+              v-model="item.numResponse"
               :items="form.allResponses"
               item-text="libResponse"
               item-value="numResponse"
@@ -46,7 +46,7 @@
             <td><v-autocomplete
               auto-select-first
               clearable
-              v-bind:value="form.allQuestions[item.numQuestionSuivante-1].numQuestion"
+              v-model="item.numQuestionSuivante"
               :items="form.allQuestions"
               item-text="libQuestion"
               item-value="numQuestion"
@@ -56,6 +56,24 @@
       </tbody>
     </template>
   </v-simple-table>
+  <v-row>
+      <v-spacer></v-spacer>
+
+      <v-form
+    ref="form"
+    v-model="form.valid"
+    lazy-validation
+  >
+      <v-btn
+      :disabled="!form.valid"
+      color="primary"
+      elevation="2"
+      class="mr-5 mt-5"
+      @click="validate"
+    >Enregistrer</v-btn>
+
+      </v-form>
+  </v-row>
 </v-container>
 </template>
 
@@ -68,17 +86,29 @@ export default {
   data() {
     return {
       form: {
+        valid: true,
         question: '',
         responses: [],
         allResponses: [],
         allQuestions: [],
         test: false
       },
+      sendForm: [{numResponse: null, numLiaison: null}, {numResponse: null, numLiaison: null}]
     };
   },
   methods: {
-    async onSubmit(e) {
-      e.preventDefault();
+    validate() {
+      console.log(this.form.responses)
+      // Récupère les soirées avec les filtres
+      // let result = await partyService.getParties({
+      //   isPartyPro: this.form.status,
+      //   price: this.form.price,
+      //   date: this.form.date,
+      //   account: this.$auth.user.id
+      // });
+      // decodeImage(result.data.error);
+
+      // this.items = result.data.error;
 
 
     }
