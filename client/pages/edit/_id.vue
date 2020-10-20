@@ -35,15 +35,23 @@
           v-for="(item, index) in form.responses"
           :key="item.label"
         >
-          <td><v-autocomplete
+            <td><v-autocomplete
               auto-select-first
               clearable
-              v-bind:value="form.allResponses[index].numResponse"
+              v-bind:value="form.allResponses[item.numResponse-1].numResponse"
               :items="form.allResponses"
               item-text="libResponse"
               item-value="numResponse"
             ></v-autocomplete></td>
-          <td>{{ item.liaison }}</td>
+            <td><v-autocomplete
+              auto-select-first
+              clearable
+              v-bind:value="form.allQuestions[item.numQuestionSuivante-1].numQuestion"
+              :items="form.allQuestions"
+              item-text="libQuestion"
+              item-value="numQuestion"
+              ></v-autocomplete>
+            </td>
         </tr>
       </tbody>
     </template>
@@ -63,6 +71,7 @@ export default {
         question: '',
         responses: [],
         allResponses: [],
+        allQuestions: [],
         test: false
       },
     };
@@ -82,10 +91,9 @@ export default {
       questionId: this.$route.params.id
     });
     let question = result.data[0].question;
-    console.log(result.data)
     var responsesArray = []
     for(let i=0; i<result.data.length; i++){
-      var object = {label: result.data[i].reponse, liaison: result.data[i].question_suivante}
+      var object = {numResponse:  result.data[i].num_reponse, label: result.data[i].reponse, liaison: result.data[i].question_suivante, numQuestionSuivante: result.data[i].num_question_suivante}
       responsesArray.push(object)
     }
     this.form.responses = responsesArray
@@ -95,12 +103,23 @@ export default {
   let resultGetAllResponses = await ResponseService.getAllResponses({
   })
   var allResponsesArray = []
-  console.log(resultGetAllResponses.data)
     for(let i=0; i<resultGetAllResponses.data.length; i++){
       var object = {numResponse: resultGetAllResponses.data[i].NUM_REPONSE, libResponse: resultGetAllResponses.data[i].REPONSE}
       allResponsesArray.push(object)
     }
     this.form.allResponses = allResponsesArray
+
+
+    //Récupère toutes les questions
+  let resultGetAllQuestions = await QuestionService.getAllQuestions({
+  })
+  var allQuestionsArray = []
+  console.log(resultGetAllQuestions.data)
+    for(let i=0; i<resultGetAllQuestions.data.length; i++){
+      var object = {numQuestion: resultGetAllQuestions.data[i].NUM_QUESTION, libQuestion: resultGetAllQuestions.data[i].QUESTION}
+      allQuestionsArray.push(object)
+    }
+    this.form.allQuestions = allQuestionsArray
 
 
     this.form.test = true
