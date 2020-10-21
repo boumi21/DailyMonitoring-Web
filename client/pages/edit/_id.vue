@@ -18,7 +18,7 @@
       </v-col>     
     </v-row>
 
-    <v-simple-table v-if="form.test">
+    <!-- <v-simple-table v-if="form.test">
     <template v-slot:default>
       <thead>
         <tr>
@@ -55,7 +55,135 @@
         </tr>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-simple-table> -->
+
+
+
+<!--  -->
+
+<v-data-table
+      v-if="form.test"
+      :headers="headers"
+      :items="form.responses"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar
+          flat
+        >
+          <v-toolbar-title>Tableau récapitulatif</v-toolbar-title>
+          <v-divider
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-spacer></v-spacer>
+          <v-dialog
+            v-model="dialog"
+            max-width="500px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                Nouvelle réponse
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
+  
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-autocomplete
+              auto-select-first
+              clearable
+              label="Sélectionnez une réponse"
+              :items="form.allResponses"
+              item-text="label"
+              item-value="numResponse"
+              v-model="editedItem.response"
+              return-object
+            ></v-autocomplete>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-autocomplete
+              auto-select-first
+              clearable
+              label="Sélectionnez une question"
+              :items="form.allQuestions"
+              item-text="libQuestion"
+              item-value="libQuestion"
+              v-model="editedItem.question"
+              return-object
+            ></v-autocomplete>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+  
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="close"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="save"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="headline">Sûr de suprimmer la question ?</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:no-data>
+        <v-btn
+          color="primary"
+          @click="initialize"
+        >
+          Reset
+        </v-btn>
+      </template>
+    </v-data-table>
+
+<!--  -->
+
+
+
+
   <v-row>
       <v-spacer></v-spacer>
 
@@ -93,9 +221,43 @@ export default {
         allQuestions: [],
         test: false
       },
-      sendForm: [{numResponse: null, numLiaison: null}, {numResponse: null, numLiaison: null}]
+      sendForm: [{numResponse: null, numLiaison: null}, {numResponse: null, numLiaison: null}],
+      headers: [
+      {text: 'Réponse', align: 'start', sortable: false, value:'label'},
+      { text: 'Question suivante', sortable: false, value: 'liaison'},
+    ],
+    dialog: false,
+    dialogDelete: false,
+    editedIndex: -1,
+    editedItem: {
+      question: {
+        liaison: '',
+        numQuestionSuivante: null,
+      },
+      response: {
+        label: '',
+        numResponse: null,
+      },    
+    },
     };
   },
+  computed: {
+    formTitle () {
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+  },
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    },
+  },
+  created () {
+    this.initialize()
+  },
+  
   methods: {
     async onValidate() {
       console.log(this.form.responses)
@@ -104,10 +266,56 @@ export default {
         let res = await QuestionService.updateQuestion(this.form.responses);
         this.$router.push("/main");
       } catch (error) {}
-    }
+    },
+
+    initialize () {
+      console.log('yoooo les boys')
+      this.responses = [
+        {
+          numQuestion: 1, numResponse: 1
+        },
+      ]
+    },
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    save () {
+      if (this.editedIndex > -1) {
+        Object.assign(this.responses[this.editedIndex], this.editedItem)
+        this.close()
+      } else {
+        let verif = false
+        if(this.editedItem.response.numResponse !== null && typeof this.editedItem.question.numQuestion !== 'undefined'){verif = true}
+        if(!verif){
+          console.log('ahi')
+        } else{
+          let itemToEdit = {numResponse: this.editedItem.response.numResponse, label: this.editedItem.response.label, liaison: this.editedItem.question.libQuestion, numQuestionSuivante: this.editedItem.question.numQuestion}
+          console.log(itemToEdit)
+          this.form.responses.push(itemToEdit)
+          this.close()
+        }
+      }
+      
+    },
+    deleteItemConfirm () {
+      this.questions.splice(this.editedIndex, 1)
+      this.closeDelete()
+    },
   },
 
-  async mounted() {
+  mounted: function() {
+    this.$nextTick(async function() {
 
     // Récupère la question et les différentes réponses
     let result = await QuestionService.getQRNQ({
@@ -127,7 +335,7 @@ export default {
   })
   var allResponsesArray = []
     for(let i=0; i<resultGetAllResponses.data.length; i++){
-      var object = {numResponse: resultGetAllResponses.data[i].NUM_REPONSE, libResponse: resultGetAllResponses.data[i].REPONSE}
+      var object = {numResponse: resultGetAllResponses.data[i].NUM_REPONSE, label: resultGetAllResponses.data[i].REPONSE}
       allResponsesArray.push(object)
     }
     this.form.allResponses = allResponsesArray
@@ -146,7 +354,8 @@ export default {
 
 
     this.form.test = true
-  }
+  });
+  },
 };
 
 
