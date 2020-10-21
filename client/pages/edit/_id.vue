@@ -169,6 +169,21 @@
           </v-dialog>
         </v-toolbar>
       </template>
+      <template v-slot:item.actions="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
       <template v-slot:no-data>
         <v-btn
           color="primary"
@@ -225,6 +240,7 @@ export default {
       headers: [
       {text: 'Réponse', align: 'start', sortable: false, value:'label'},
       { text: 'Question suivante', sortable: false, value: 'liaison'},
+      { text: 'Actions', value: 'actions', sortable: false },
     ],
     dialog: false,
     dialogDelete: false,
@@ -290,26 +306,34 @@ export default {
         this.editedIndex = -1
       })
     },
+    editItem (item) {
+        this.editedIndex = this.form.responses.indexOf(item)
+        console.log(this.responses.indexOf(item))
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        this.editedIndex = this.form.responses.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      },
     save () {
       if (this.editedIndex > -1) {
-        Object.assign(this.responses[this.editedIndex], this.editedItem)
+        let itemToEdit = {numResponse: this.editedItem.response.numResponse, label: this.editedItem.response.label, liaison: this.editedItem.question.libQuestion, numQuestionSuivante: this.editedItem.question.numQuestion}
+                console.log(itemToEdit)
+        Object.assign(this.form.responses[this.editedIndex], itemToEdit)
         this.close()
       } else {
-        let verif = false
-        if(this.editedItem.response.numResponse !== null && typeof this.editedItem.question.numQuestion !== 'undefined'){verif = true}
-        if(!verif){
-          console.log('ahi')
-        } else{
           let itemToEdit = {numResponse: this.editedItem.response.numResponse, label: this.editedItem.response.label, liaison: this.editedItem.question.libQuestion, numQuestionSuivante: this.editedItem.question.numQuestion}
           console.log(itemToEdit)
           this.form.responses.push(itemToEdit)
           this.close()
-        }
       }
       
     },
     deleteItemConfirm () {
-      this.questions.splice(this.editedIndex, 1)
+      this.form.responses.splice(this.editedIndex, 1)
       this.closeDelete()
     },
   },
