@@ -69,7 +69,7 @@
       color="primary"
       elevation="2"
       class="mr-5 mt-5"
-      @click="validate"
+      @click="onValidate"
     >Enregistrer</v-btn>
 
       </v-form>
@@ -97,20 +97,13 @@ export default {
     };
   },
   methods: {
-    validate() {
+    async onValidate() {
       console.log(this.form.responses)
-      // Récupère les soirées avec les filtres
-      // let result = await partyService.getParties({
-      //   isPartyPro: this.form.status,
-      //   price: this.form.price,
-      //   date: this.form.date,
-      //   account: this.$auth.user.id
-      // });
-      // decodeImage(result.data.error);
-
-      // this.items = result.data.error;
-
-
+      try {
+        // Enregistre les modifications dans la BDD
+        let res = await QuestionService.updateQuestion(this.form.responses);
+        this.$router.push("/main");
+      } catch (error) {}
     }
   },
 
