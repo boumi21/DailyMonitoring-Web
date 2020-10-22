@@ -128,7 +128,7 @@
               label="Sélectionnez une question"
               :items="form.allQuestions"
               item-text="libQuestion"
-              item-value="libQuestion"
+              item-value="numQuestion"
               v-model="editedItem.question"
               return-object
             ></v-autocomplete>
@@ -308,9 +308,20 @@ export default {
     },
     editItem (item) {
         this.editedIndex = this.form.responses.indexOf(item)
-        console.log(this.responses.indexOf(item))
-        this.editedItem = Object.assign({}, item)
+
+        let itemToEdit = {
+          question: {
+            liaison: item.liaison,
+            numQuestionSuivante: item.numQuestionSuivante
+          },
+          response: {
+            label: item.label,
+            numResponse: item.numResponse
+          }
+        }
+        this.editedItem = Object.assign({}, itemToEdit)
         this.dialog = true
+        console.log(this.editedItem)
       },
 
       deleteItem (item) {
