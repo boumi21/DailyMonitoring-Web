@@ -85,7 +85,7 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <a class="icon-link" :href="`/edit/${item.numquestion}`"><v-icon
           small
           class="mr-2"
@@ -132,11 +132,11 @@ export default {
       for(let i=0; i<result.data.length; i++){
           var object = {question: result.data[i].QUESTION, numquestion: result.data[i].NUM_QUESTION}
           console.log(result.data[0])
-          //object = result.data[i].QUESTION
+
           questionsArray.push(object)
       }
       console.log(questionsArray)
-      // Décode l'image de la bdd
+
       this.questions = questionsArray;
     });
   },
@@ -199,10 +199,6 @@ export default {
     },
 
     editItem (item) {
-        this.$router.push("./book/${item.id_party}");
-    //   this.editedIndex = this.questions.indexOf(item)
-    //   this.editedItem = Object.assign({}, item)
-    //   this.dialog = true
     },
 
     deleteItem (item) {
