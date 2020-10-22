@@ -18,46 +18,6 @@
       </v-col>     
     </v-row>
 
-    <!-- <v-simple-table v-if="form.test">
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">
-            Réponse
-          </th>
-          <th class="text-left">
-            Liaison
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(item, index) in form.responses"
-          :key="item.label"
-        >
-            <td><v-autocomplete
-              auto-select-first
-              clearable
-              v-model="item.numResponse"
-              :items="form.allResponses"
-              item-text="libResponse"
-              item-value="numResponse"
-            ></v-autocomplete></td>
-            <td><v-autocomplete
-              auto-select-first
-              clearable
-              v-model="item.numQuestionSuivante"
-              :items="form.allQuestions"
-              item-text="libQuestion"
-              item-value="numQuestion"
-              ></v-autocomplete>
-            </td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table> -->
-
-
 
 <!--  -->
 
@@ -80,7 +40,7 @@
           <v-spacer></v-spacer>
           <v-dialog
             v-model="dialog"
-            max-width="500px"
+            max-width="700px"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -104,7 +64,6 @@
                     <v-col
                       cols="12"
                       sm="6"
-                      md="4"
                     >
                       <v-autocomplete
               auto-select-first
@@ -120,15 +79,14 @@
                     <v-col
                       cols="12"
                       sm="6"
-                      md="4"
                     >
                       <v-autocomplete
               auto-select-first
               clearable
               label="Sélectionnez une question"
               :items="form.allQuestions"
-              item-text="libQuestion"
-              item-value="numQuestion"
+              item-text="liaison"
+              item-value="numQuestionSuivante"
               v-model="editedItem.question"
               return-object
             ></v-autocomplete>
@@ -144,24 +102,24 @@
                   text
                   @click="close"
                 >
-                  Cancel
+                  Annuler
                 </v-btn>
                 <v-btn
                   color="blue darken-1"
                   text
                   @click="save"
                 >
-                  Save
+                  Sauvegarder
                 </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="headline">Sûr de suprimmer la question ?</v-card-title>
+              <v-card-title class="headline">Voulez-vous suprimmer cette réponse ?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="closeDelete">Annuler</v-btn>
                 <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -169,7 +127,7 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
       <v-icon
         small
         class="mr-2"
@@ -259,7 +217,7 @@ export default {
   },
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'Nouvelle réponse' : 'Modification'
     },
   },
   watch: {
@@ -285,7 +243,6 @@ export default {
     },
 
     initialize () {
-      console.log('yoooo les boys')
       this.responses = [
         {
           numQuestion: 1, numResponse: 1
@@ -331,12 +288,11 @@ export default {
       },
     save () {
       if (this.editedIndex > -1) {
-        let itemToEdit = {numResponse: this.editedItem.response.numResponse, label: this.editedItem.response.label, liaison: this.editedItem.question.libQuestion, numQuestionSuivante: this.editedItem.question.numQuestion}
-                console.log(itemToEdit)
+        let itemToEdit = {numResponse: this.editedItem.response.numResponse, label: this.editedItem.response.label, liaison: this.editedItem.question.liaison, numQuestionSuivante: this.editedItem.question.numQuestionSuivante}
         Object.assign(this.form.responses[this.editedIndex], itemToEdit)
         this.close()
       } else {
-          let itemToEdit = {numResponse: this.editedItem.response.numResponse, label: this.editedItem.response.label, liaison: this.editedItem.question.libQuestion, numQuestionSuivante: this.editedItem.question.numQuestion}
+          let itemToEdit = {numResponse: this.editedItem.response.numResponse, label: this.editedItem.response.label, liaison: this.editedItem.question.liaison, numQuestionSuivante: this.editedItem.question.numQuestionSuivante}
           console.log(itemToEdit)
           this.form.responses.push(itemToEdit)
           this.close()
@@ -380,9 +336,8 @@ export default {
   let resultGetAllQuestions = await QuestionService.getAllQuestions({
   })
   var allQuestionsArray = []
-  console.log(resultGetAllQuestions.data)
     for(let i=0; i<resultGetAllQuestions.data.length; i++){
-      var object = {numQuestion: resultGetAllQuestions.data[i].NUM_QUESTION, libQuestion: resultGetAllQuestions.data[i].QUESTION}
+      var object = {numQuestionSuivante: resultGetAllQuestions.data[i].NUM_QUESTION, liaison: resultGetAllQuestions.data[i].QUESTION}
       allQuestionsArray.push(object)
     }
     this.form.allQuestions = allQuestionsArray
