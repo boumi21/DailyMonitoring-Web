@@ -1,4 +1,5 @@
 <template>
+<v-container>
   <v-data-table
       :headers="headers"
       :items="questions"
@@ -86,7 +87,7 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <a class="icon-link" :href="`/edit/${item.numquestion}`"><v-icon
+        <a class="icon-link" :href="`/edit/${item.numQuestion}`"><v-icon
           small
           class="mr-2"
           @click="editItem(item)"
@@ -108,36 +109,135 @@
           Reset
         </v-btn>
       </template>
-      <v-card class="mt-3" header="Form Data Result">
+      <v-card class="mt-3" header="Form Data resultQuestions">
         {{ this.questions }}
       </v-card>
     </v-data-table>
 
-     
+
+
+    <div>
+    <v-dialog
+      v-model="dialog"
+      width="1000"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="red lighten-2"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          Ajouter une réponse
+        </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title class="headline grey lighten-2">
+          Ajouter une réponse
+        </v-card-title>
+
+    <v-form
+    ref="form"
+  >
+  <v-row no-gutters>
+    <v-col
+    cols="5">
+    <v-list disabled>
+      <v-subheader>Réponses enregistrées</v-subheader>
+        <v-list-item
+          v-for="(item, i) in responses"
+          :key="i"
+        >
+          <v-list-item-content>
+            <v-list-item-title v-text="item.response"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+    </v-list>
+    </v-col>
+    
+  
+  <v-col
+  :cols="5">
+    <v-text-field
+      v-model="formResponse.textResponse"
+      label="Nouvelle réponse"
+      required
+    ></v-text-field>
+    </v-col>
+
+<v-col
+:cols="2">
+    <v-btn
+      color="success"
+      class="mr-4"
+      @click="validateResponse"
+    > 
+      Créer
+    </v-btn>
+</v-col>
+
+    
+  
+    
+  </v-row>
+  </v-form>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            Fermer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+
+
+</v-container>
 </template>
 
 
 <script>
 import QuestionService from "@/services/QuestionService.js";
+import ResponseService from "@/services/ResponseService.js";
 
 export default {
 
     mounted: function() {
     this.$nextTick(async function() {
-      // Récupère toutes les soirées
-      let result = await QuestionService.getAllQuestions({
+      // Récupère toutes les questions
+      let resultQuestions = await QuestionService.getAllQuestions({
       });
       
       var questionsArray = []
-      for(let i=0; i<result.data.length; i++){
-          var object = {question: result.data[i].QUESTION, numquestion: result.data[i].NUM_QUESTION}
-          console.log(result.data[0])
+      for(let i=0; i<resultQuestions.data.length; i++){
+          var object = {question: resultQuestions.data[i].QUESTION, numQuestion: resultQuestions.data[i].NUM_QUESTION}
 
           questionsArray.push(object)
       }
-      console.log(questionsArray)
-
       this.questions = questionsArray;
+
+      /******************************** */
+      // Récupère toutes les réponses
+      let resultResponses = await ResponseService.getAllResponses({
+      });
+      
+      var responsesArray = []
+      for(let i=0; i<resultResponses.data.length; i++){
+          var object = {response: resultResponses.data[i].REPONSE, numResponse: resultResponses.data[i].NUM_REPONSE}
+
+          responsesArray.push(object)
+      }
+      this.responses = responsesArray;
+      
+
     });
   },
 
@@ -145,6 +245,7 @@ export default {
     return {
       dialog: false,
     dialogDelete: false,
+    selectedItem: 1,
     headers: [
       {
         text: 'Questions',
@@ -155,15 +256,19 @@ export default {
       { text: 'Actions', value: 'actions', sortable: false },
     ],
     questions: [],
+    responses: [],
     editedIndex: -1,
     editedItem: {
       question: '',
-      numquestion: null,
+      numQuestion: null,
     },
     defaultItem: {
       question: '',
-      numquestion: null,
+      numQuestion: null,
     },
+    formResponse: {
+      textResponse: ''
+    }
     };
   },
   computed: {
@@ -187,7 +292,6 @@ export default {
 
   methods: {
     initialize () {
-      console.log('yoooo les boys')
       this.questions = [
         {
           question: 'Frozen Yogurt',
@@ -236,6 +340,11 @@ export default {
       }
       this.close()
     },
+
+
+    validateResponse () {
+        
+      },
   },
 };
 </script>
