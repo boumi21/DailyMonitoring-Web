@@ -71,7 +71,7 @@ function setResponse(req, callback) {
 function updateResponse(req, callback) {
   let checkResponse = "SELECT * FROM reponse r " +
     "WHERE r.reponse = " + mysql.escape(req.body.reponseLib.trim()) + " " +
-    "AND r.num_reponse <> " + mysql.escape(req.body.reponseId)
+    "AND r.num_reponse <> " + req.body.reponseId
 
   connection.query(checkResponse, function (err, result, fields) {
     if (err) {
@@ -85,7 +85,7 @@ function updateResponse(req, callback) {
       else {
         let updateResponse = "UPDATE reponse r SET " +
           "reponse = " + mysql.escape(req.body.reponse) + " " +
-          "WHERE r.num_reponse = " + mysql.escape(req.body.reponseId)
+          "WHERE r.num_reponse = " + req.body.reponseId
 
         connection.query(updateResponse, function (err, result, fields) {
           if (err) {
@@ -104,7 +104,7 @@ function updateResponse(req, callback) {
 
 function deleteResponse(req, callback) {
   let deletePossede = "DELETE FROM possede " +
-    "WHERE num_reponse = " + mysql.escape(req.body.reponseId)
+    "WHERE num_reponse = " + req.body.reponseId
 
   connection.query(deletePossede, function (err, result, fields) {
     if (err) {
@@ -114,7 +114,7 @@ function deleteResponse(req, callback) {
     else {
       console.log(result)
       let deleteResponse = "DELETE FROM reponse " +
-        "WHERE num_reponse = " + mysql.escape(req.body.reponseId)
+        "WHERE num_reponse = " + req.body.reponseId
 
       connection.query(deleteResponse, function (err, result, fields) {
         if (err) {

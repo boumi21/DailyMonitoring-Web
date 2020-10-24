@@ -189,6 +189,7 @@ export default {
       form: {
         valid: true,
         question: '',
+        questionId: this.$route.params.id,
         responses: [],
         allResponses: [],
         allQuestions: [],
@@ -234,10 +235,10 @@ export default {
   
   methods: {
     async onValidate() {
-      console.log(this.form.responses)
+      console.log(this.form)
       try {
         // Enregistre les modifications dans la BDD
-        let res = await QuestionService.updateQuestion(this.form.responses);
+        let res = await QuestionService.updateQuestion(this.form);
         this.$router.push("/main");
       } catch (error) {}
     },
