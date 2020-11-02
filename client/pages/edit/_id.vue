@@ -110,6 +110,10 @@
 
     <!--  -->
 
+    <v-alert type="error" v-if="alertDuplicate">
+      Merci de ne pas saisir plusieurs fois la même réponse pour enregistrer
+    </v-alert>
+
     <v-row>
       <v-spacer></v-spacer>
 
@@ -155,6 +159,7 @@ export default {
       dialog: false,
       dialogDelete: false,
       editedIndex: -1,
+      alertDuplicate: false,
       editedItem: {
         question: {
           liaison: "",
@@ -186,12 +191,22 @@ export default {
 
   methods: {
     async onValidate() {
+      let responsesArray = [];
+      for (let i = 0; i < this.form.responses.length; i++) {
+        responsesArray.push(this.form.responses[i].numResponse);
+      }
+      let verif = checkIfArrayIsUnique(responsesArray);
+      console.log("le tableau est unique : " + verif);
       console.log(this.form);
-      try {
-        // Enregistre les modifications dans la BDD
-        let res = await QuestionService.updateQuestion(this.form);
-        this.$router.push("/main");
-      } catch (error) {}
+      if (verif) {
+        try {
+          // Enregistre les modifications dans la BDD
+          let res = await QuestionService.updateQuestion(this.form);
+          this.$router.push("/main");
+        } catch (error) {}
+      } else {
+        this.alertDuplicate = true;
+      }
     },
 
     initialize() {
@@ -332,6 +347,10 @@ function setQuestionToNull(editedItem) {
     editedItem.question.numQuestionSuivante = null;
   }
   return editedItem;
+}
+
+function checkIfArrayIsUnique(myArray) {
+  return myArray.length === new Set(myArray).size;
 }
 </script>
 
