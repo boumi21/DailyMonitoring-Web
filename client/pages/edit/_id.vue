@@ -102,9 +102,9 @@
         </v-icon>
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">
+        <!-- <v-btn color="primary" @click="initialize">
           Reset
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
@@ -210,12 +210,12 @@ export default {
     },
 
     initialize() {
-      this.responses = [
-        {
-          numQuestion: 1,
-          numResponse: 1
-        }
-      ];
+      // this.responses = [
+      //   {
+      //     numQuestion: 1,
+      //     numResponse: 1
+      //   }
+      // ];
     },
     close() {
       this.dialog = false;
@@ -232,6 +232,7 @@ export default {
       });
     },
     editItem(item) {
+      console.log(this.form.responses);
       this.editedIndex = this.form.responses.indexOf(item);
 
       let itemToEdit = {
@@ -298,6 +299,11 @@ export default {
         questionId: this.$route.params.id
       });
       let question = result.data[0].question;
+
+      //Si il n'y a aucune réponse, vide le tableau des réponses
+      if (result.data[0].num_reponse === null) {
+        result.data = [];
+      }
       var responsesArray = [];
       for (let i = 0; i < result.data.length; i++) {
         var object = {
