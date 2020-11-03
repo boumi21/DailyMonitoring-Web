@@ -83,7 +83,37 @@ function updateQuestion(req, callback) {
                 }
               })
             }
-            callback(null, true)
+            // DELETE
+            let selectDelete = "SELECT p.NUM_REPONSE from POSSEDE p " +
+                               "WHERE p.NUM_QUESTION = " + req.body.questionId
+            connection.query(selectDelete, function (err, result, fields) {
+              if (err) {
+                console.log("selectDelete Erreur : " + err.sqlMessage);
+                callback(err.sqlMessage, null)
+              }
+              else {
+                var arrayNumResp = [];
+                for (i = 0; i < req.body.responses.length; i++) {
+                  arrayNumResp.push(req.body.responses[i].numResponse)
+                }
+                for (i = 0; i < result.length; i++) {
+                  let idx = i
+                  console.log(arrayNumResp.indexOf(result[idx].NUM_REPONSE) == -1)
+                  if (arrayNumResp.indexOf(result[idx].NUM_REPONSE) == -1) {
+                    let deleteResponse = "DELETE FROM POSSEDE " +
+                                         "WHERE POSSEDE.NUM_QUESTION = " + req.body.questionId + " " +
+                                         "AND POSSEDE.NUM_REPONSE = " + result[idx].NUM_REPONSE
+
+                    connection.query(deleteResponse, function (err, result, fields) {
+                      if (err) {
+                        console.log("deleteResponse err : " + err.sqlMessage)
+                      }
+                    })
+                  }
+                }
+                callback(null, true)
+              }
+            })
           }
         })
       }
