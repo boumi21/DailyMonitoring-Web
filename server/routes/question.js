@@ -80,4 +80,17 @@ router.post("/deleteQuestion", function (req, res) {
   })
 })
 
+router.post("/addQuestion", function (req, res) {
+  question.addQuestion(req, function callback(err, result) {
+    if (err != null) {
+      res.send({
+        error: err
+      })
+    }
+    else {
+      res.send(result)
+    }
+  })
+})
+
 module.exports = router;

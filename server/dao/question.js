@@ -223,11 +223,28 @@ function deleteQuestion(req, callback) {
   })
 }
 
+
+function addQuestion(req, callback) {
+  let addQuestion = 'INSERT INTO question VALUES (null,"'+req.body.textQuestion+'" ) '
+
+  connection.query(addQuestion, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      console.log(result)
+      callback(null, result)
+    }
+  })
+}
+
 module.exports = {
   getAllQuestions,
   updateQuestion,
   getNextQuestion,
   getQRNQ,
   setQuestion,
-  deleteQuestion
+  deleteQuestion,
+  addQuestion
 }

@@ -98,7 +98,7 @@
             Ajouter une réponse
           </v-card-title>
 
-          <v-form ref="form">
+          <v-form ref="formResponse">
             <v-row no-gutters>
               <v-col cols="5">
                 <v-list disabled>
@@ -134,6 +134,64 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="dialogAddResponse = false">
+              Fermer
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+
+    <!-- --------------------------------------------------------------------- -->
+
+    <div>
+      <v-dialog v-model="dialogAddQuestion" width="1000">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+            Ajouter une Question
+          </v-btn>
+        </template>
+
+        <v-card>
+          <v-card-title class="headline grey lighten-2">
+            Ajouter une question
+          </v-card-title>
+
+          <v-form ref="formQuestion">
+            <v-row no-gutters>
+              <v-col cols="5">
+                <v-list disabled>
+                  <v-subheader>Questions enregistrées</v-subheader>
+                  <v-list-item v-for="(item, i) in questions" :key="i">
+                    <v-list-item-content>
+                      <v-list-item-title
+                        v-text="item.question"
+                      ></v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+
+              <v-col :cols="5">
+                <v-text-field
+                  v-model="formQuestion.textQuestion"
+                  label="Nouvelle question"
+                  required
+                ></v-text-field>
+              </v-col>
+
+              <v-col :cols="2">
+                <v-btn color="success" class="mr-4" @click="validateQuestion">
+                  Créer
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="dialogAddQuestion = false">
               Fermer
             </v-btn>
           </v-card-actions>
@@ -186,6 +244,7 @@ export default {
       dialog: false,
       dialogDelete: false,
       dialogAddResponse: false,
+      dialogAddQuestion: false,
       selectedItem: 1,
       headers: [
         {
@@ -209,6 +268,9 @@ export default {
       },
       formResponse: {
         textResponse: ""
+      },
+      formQuestion: {
+        textQuestion: ""
       }
     };
   },
@@ -285,10 +347,21 @@ export default {
       try {
         // Ajoute la réponse à la bdd
         let res = await ResponseService.addResponse(this.formResponse);
-        console.log(res);
         this.responses.push({
           response: this.formResponse.textResponse,
           numResponse: res.data.insertId
+        });
+        this.close();
+      } catch (error) {}
+    },
+
+    async validateQuestion() {
+      try {
+        // Ajoute la question à la bdd
+        let res = await QuestionService.addQuestion(this.formQuestion);
+        this.questions.push({
+          question: this.formQuestion.textQuestion,
+          numQuestion: res.data.insertId
         });
         this.close();
       } catch (error) {}

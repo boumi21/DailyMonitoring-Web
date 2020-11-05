@@ -24,5 +24,9 @@ export default {
 
   deleteQuestion(credentials) {
     return api().post('question/deleteQuestion', credentials)
+  },
+
+  addQuestion(credentials) {
+    return api().post('question/addQuestion', credentials)
   }
 }
