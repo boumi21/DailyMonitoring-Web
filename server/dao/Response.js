@@ -130,10 +130,28 @@ function deleteResponse(req, callback) {
   })
 }
 
+
+function addResponse(req, callback) {
+  console.log(req.body.textResponse)
+  let addResponse = "INSERT INTO reponse VALUES (null,'"+req.body.textResponse+"' ) "
+
+  connection.query(addResponse, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      console.log(result)
+      callback(null, result)
+    }
+  })
+}
+
 module.exports = {
   getAllResponses,
   getResponses,
   setResponse,
   updateResponse,
-  deleteResponse
+  deleteResponse,
+  addResponse
 }

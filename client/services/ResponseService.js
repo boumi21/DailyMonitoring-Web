@@ -20,5 +20,9 @@ export default {
 
   deleteResponse(credentials) {
     return api().post('response/deleteResponse', credentials)
+  },
+
+  addResponse(credentials) {
+    return api().post('response/addResponse', credentials)
   }
 }

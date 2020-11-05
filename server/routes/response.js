@@ -80,4 +80,17 @@ router.post("/deleteResponse", function (req, res) {
   })
 })
 
+router.post("/addResponse", function (req, res) {
+  response.addResponse(req, function callback(err, result) {
+    if (err != null) {
+      res.send({
+        error: err
+      })
+    }
+    else {
+      res.send(result)
+    }
+  })
+})
+
 module.exports = router;
