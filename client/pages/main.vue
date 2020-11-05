@@ -285,7 +285,11 @@ export default {
       try {
         // Ajoute la réponse à la bdd
         let res = await ResponseService.addResponse(this.formResponse);
-
+        console.log(res);
+        this.responses.push({
+          response: this.formResponse.textResponse,
+          numResponse: res.data.insertId
+        });
         this.close();
       } catch (error) {}
     }
