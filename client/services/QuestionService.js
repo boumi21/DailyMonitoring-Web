@@ -28,5 +28,9 @@ export default {
 
   addQuestion(credentials) {
     return api().post('question/addQuestion', credentials)
+  },
+
+  getFirstQuestion(credentials) {
+    return api().post('question/getFirstQuestion', credentials)
   }
 }

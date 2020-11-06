@@ -6,6 +6,15 @@
           <v-text-field v-model="form.question" label="Question"></v-text-field>
         </v-form>
       </v-col>
+      <v-col>
+        <v-checkbox v-model="form.isFirstQuestion">
+          <template v-slot:label>
+            <div>
+              Je définis cette question en tant que départ
+            </div>
+          </template>
+        </v-checkbox>
+      </v-col>
     </v-row>
 
     <!--  -->
@@ -145,6 +154,7 @@ export default {
         responses: [],
         allResponses: [],
         allQuestions: [],
+        isFirstQuestion: false,
         test: false
       },
       sendForm: [
@@ -340,6 +350,13 @@ export default {
         allQuestionsArray.push(object);
       }
       this.form.allQuestions = allQuestionsArray;
+
+      //Vérifie si c'est la question de départ
+      let resultGetFirstQuestion = await QuestionService.getFirstQuestion({});
+      let firstQuestion = resultGetFirstQuestion.data[0].NUM_PREMIERE_QUESTION;
+      if (firstQuestion == this.$route.params.id) {
+        this.form.isFirstQuestion = true;
+      }
 
       this.form.test = true;
     });

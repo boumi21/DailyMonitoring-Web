@@ -239,6 +239,22 @@ function addQuestion(req, callback) {
   })
 }
 
+
+function getFirstQuestion(req, callback) {
+  let getFirstQuestion = 'SELECT NUM_PREMIERE_QUESTION FROM questionnaire'
+
+  connection.query(getFirstQuestion, function (err, result, fields) {
+    if (err) {
+      console.log(err)
+      callback(err.sqlMessage, null)
+    }
+    else {
+      console.log(result)
+      callback(null, result)
+    }
+  })
+}
+
 module.exports = {
   getAllQuestions,
   updateQuestion,
@@ -246,5 +262,6 @@ module.exports = {
   getQRNQ,
   setQuestion,
   deleteQuestion,
-  addQuestion
+  addQuestion,
+  getFirstQuestion
 }

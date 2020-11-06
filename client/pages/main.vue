@@ -85,119 +85,131 @@
       </v-card>
     </v-data-table>
 
-    <div>
-      <v-dialog v-model="dialogAddResponse" width="1000">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-            Ajouter une réponse
-          </v-btn>
-        </template>
+    <v-row>
+      <v-col>
+        <div>
+          <v-dialog v-model="dialogAddResponse" width="1000">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+                Ajouter une réponse
+              </v-btn>
+            </template>
 
-        <v-card>
-          <v-card-title class="headline grey lighten-2">
-            Ajouter une réponse
-          </v-card-title>
+            <v-card>
+              <v-card-title class="headline grey lighten-2">
+                Ajouter une réponse
+              </v-card-title>
 
-          <v-form ref="formResponse">
-            <v-row no-gutters>
-              <v-col cols="5">
-                <v-list disabled>
-                  <v-subheader>Réponses enregistrées</v-subheader>
-                  <v-list-item v-for="(item, i) in responses" :key="i">
-                    <v-list-item-content>
-                      <v-list-item-title
-                        v-text="item.response"
-                      ></v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-col>
+              <v-form ref="formResponse">
+                <v-row no-gutters>
+                  <v-col cols="5">
+                    <v-list disabled>
+                      <v-subheader>Réponses enregistrées</v-subheader>
+                      <v-list-item v-for="(item, i) in responses" :key="i">
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="item.response"
+                          ></v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
 
-              <v-col :cols="5">
-                <v-text-field
-                  v-model="formResponse.textResponse"
-                  label="Nouvelle réponse"
-                  required
-                ></v-text-field>
-              </v-col>
+                  <v-col :cols="5">
+                    <v-text-field
+                      v-model="formResponse.textResponse"
+                      label="Nouvelle réponse"
+                      required
+                    ></v-text-field>
+                  </v-col>
 
-              <v-col :cols="2">
-                <v-btn color="success" class="mr-4" @click="validateResponse">
-                  Créer
+                  <v-col :cols="2">
+                    <v-btn
+                      color="success"
+                      class="mr-4"
+                      @click="validateResponse"
+                    >
+                      Créer
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-form>
+
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="dialogAddResponse = false">
+                  Fermer
                 </v-btn>
-              </v-col>
-            </v-row>
-          </v-form>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
+      </v-col>
+      <!-- --------------------------------------------------------------------- -->
+      <v-col>
+        <div>
+          <v-dialog v-model="dialogAddQuestion" width="1000">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+                Ajouter une Question
+              </v-btn>
+            </template>
 
-          <v-divider></v-divider>
+            <v-card>
+              <v-card-title class="headline grey lighten-2">
+                Ajouter une question
+              </v-card-title>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialogAddResponse = false">
-              Fermer
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
+              <v-form ref="formQuestion">
+                <v-row no-gutters>
+                  <v-col cols="5">
+                    <v-list disabled>
+                      <v-subheader>Questions enregistrées</v-subheader>
+                      <v-list-item v-for="(item, i) in questions" :key="i">
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="item.question"
+                          ></v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
 
-    <!-- --------------------------------------------------------------------- -->
+                  <v-col :cols="5">
+                    <v-text-field
+                      v-model="formQuestion.textQuestion"
+                      label="Nouvelle question"
+                      required
+                    ></v-text-field>
+                  </v-col>
 
-    <div>
-      <v-dialog v-model="dialogAddQuestion" width="1000">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-            Ajouter une Question
-          </v-btn>
-        </template>
+                  <v-col :cols="2">
+                    <v-btn
+                      color="success"
+                      class="mr-4"
+                      @click="validateQuestion"
+                    >
+                      Créer
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-form>
 
-        <v-card>
-          <v-card-title class="headline grey lighten-2">
-            Ajouter une question
-          </v-card-title>
+              <v-divider></v-divider>
 
-          <v-form ref="formQuestion">
-            <v-row no-gutters>
-              <v-col cols="5">
-                <v-list disabled>
-                  <v-subheader>Questions enregistrées</v-subheader>
-                  <v-list-item v-for="(item, i) in questions" :key="i">
-                    <v-list-item-content>
-                      <v-list-item-title
-                        v-text="item.question"
-                      ></v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-col>
-
-              <v-col :cols="5">
-                <v-text-field
-                  v-model="formQuestion.textQuestion"
-                  label="Nouvelle question"
-                  required
-                ></v-text-field>
-              </v-col>
-
-              <v-col :cols="2">
-                <v-btn color="success" class="mr-4" @click="validateQuestion">
-                  Créer
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="dialogAddQuestion = false">
+                  Fermer
                 </v-btn>
-              </v-col>
-            </v-row>
-          </v-form>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialogAddQuestion = false">
-              Fermer
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

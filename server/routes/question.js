@@ -93,4 +93,17 @@ router.post("/addQuestion", function (req, res) {
   })
 })
 
+router.post("/getFirstQuestion", function (req, res) {
+  question.getFirstQuestion(req, function callback(err, result) {
+    if (err != null) {
+      res.send({
+        error: err
+      })
+    }
+    else {
+      res.send(result)
+    }
+  })
+})
+
 module.exports = router;
