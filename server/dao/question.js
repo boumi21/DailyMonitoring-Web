@@ -111,9 +111,20 @@ function updateQuestion(req, callback) {
                     })
                   }
                 }
-                callback(null, true)
               }
             })
+            // FIRST QUESTION
+            if (req.body.isFirstQuestion == true) {
+              let setFirstQuestion = "UPDATE questionnaire q SET " +
+                "q.NUM_PREMIERE_QUESTION = " + req.body.questionId + " " +
+                "WHERE q.NOM_QUESTIONNAIRE = 'TX52'"
+              connection.query(setFirstQuestion, function (err, result, fields) {
+                if (err) {
+                  console.log("setFirstQuestion Erreur : " + err.sqlMessage)
+                  callback(err.sqlMessage, null)
+                }
+              })
+            }
           }
         })
       }
@@ -216,7 +227,31 @@ function deleteQuestion(req, callback) {
         }
         else {
           console.log(result)
-          callback(null, result)
+          let checkFirstQuestion = "SELECT * FROM questionnaire q " +
+            "WHERE q.premiere_question = " + req.body.questionId + " " +
+            "AND q.nom_questionnaire = 'TX52'"
+
+          connection.query(checkFirstQuestion, function (err, result, fields) {
+            if (err) {
+              console.log(err)
+              callback(err.sqlMessage, null)
+            }
+            else {
+              if (result.length != 0) {
+                let updateFirstQuestion = "UPDATE questionnaire q " +
+                  "SET q.premiere_question = null " +
+                  "WHERE q.nom_questionnaire = 'TX52"
+
+                connection.query(updateFirstQuestion, function (err, result, fields) {
+                  if (err) {
+                    console.log(err)
+                    callback(err.sqlMessage, null)
+                  }
+                })
+              }
+              callback(null, result)
+            }
+          })
         }
       })
     }
@@ -241,7 +276,7 @@ function addQuestion(req, callback) {
 
 
 function getFirstQuestion(req, callback) {
-  let getFirstQuestion = 'SELECT NUM_PREMIERE_QUESTION FROM questionnaire'
+  let getFirstQuestion = "SELECT NUM_PREMIERE_QUESTION FROM questionnaire WHERE questionnaire.nom_questionnaire = 'TX52'"
 
   connection.query(getFirstQuestion, function (err, result, fields) {
     if (err) {
