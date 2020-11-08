@@ -358,7 +358,11 @@ export default {
     async validateResponse() {
       try {
         // Ajoute la réponse à la bdd
-        let res = await ResponseService.addResponse(this.formResponse);
+        let res = await ResponseService.setResponse(this.formResponse);
+        if (res.data.hasOwnProperty("error")) {
+          alert(res.data.error)
+          return;
+        }
         this.responses.push({
           response: this.formResponse.textResponse,
           numResponse: res.data.insertId
@@ -370,7 +374,11 @@ export default {
     async validateQuestion() {
       try {
         // Ajoute la question à la bdd
-        let res = await QuestionService.addQuestion(this.formQuestion);
+        let res = await QuestionService.setQuestion(this.formQuestion);
+        if (res.data.hasOwnProperty("error")) {
+          alert(res.data.error)
+          return;
+        }
         this.questions.push({
           question: this.formQuestion.textQuestion,
           numQuestion: res.data.insertId

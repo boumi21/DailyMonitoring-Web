@@ -38,7 +38,7 @@ function getResponses(req, callback) {
 
 function setResponse(req, callback) {
   let checkResponse = "SELECT * FROM reponse r " +
-    "WHERE r.reponse = " + mysql.escape(req.body.reponse.trim())
+    "WHERE r.reponse = " + mysql.escape(req.body.textResponse.trim())
 
   connection.query(checkResponse, function (err, result, fields) {
     if (err) {
@@ -52,7 +52,7 @@ function setResponse(req, callback) {
       else {
         let setResponse = "INSERT INTO reponse " +
           "(reponse) VALUES ?"
-        let value = [[req.body.reponseLib.trim()]]
+        let value = [[req.body.textResponse.trim()]]
 
         connection.query(setResponse, [value], function (err, result, fields) {
           if (err) {

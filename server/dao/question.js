@@ -125,6 +125,7 @@ function updateQuestion(req, callback) {
                 }
               })
             }
+            callback(null, result)
           }
         })
       }
@@ -175,7 +176,7 @@ function getQRNQ(req, callback) {
 
 function setQuestion(req, callback) {
   let checkQuestion = "SELECT * FROM question q " +
-                      "WHERE q.question = " + mysql.escape(req.body.questionLib.trim())
+                      "WHERE q.question = " + mysql.escape(req.body.textQuestion.trim())
 
   connection.query(checkQuestion, function (err, result, fields) {
     if (err) {
@@ -189,8 +190,8 @@ function setQuestion(req, callback) {
       else {
         let setQuestion = "INSERT INTO question " +
                           "(question) VALUES ?"
-        let value = [[req.body.questionLib.trim()]]
-
+        let value = [[req.body.textQuestion.trim()]]
+ 
         connection.query(setQuestion, [value], function (err, result, fields) {
           if (err) {
             console.log(err)
