@@ -229,7 +229,7 @@ function deleteQuestion(req, callback) {
         else {
           console.log(result)
           let checkFirstQuestion = "SELECT * FROM questionnaire q " +
-            "WHERE q.premiere_question = " + req.body.questionId + " " +
+            "WHERE q.num_premiere_question = " + req.body.questionId + " " +
             "AND q.nom_questionnaire = 'TX52'"
 
           connection.query(checkFirstQuestion, function (err, result, fields) {
@@ -240,7 +240,7 @@ function deleteQuestion(req, callback) {
             else {
               if (result.length != 0) {
                 let updateFirstQuestion = "UPDATE questionnaire q " +
-                  "SET q.premiere_question = null " +
+                  "SET q.num_premiere_question = null " +
                   "WHERE q.nom_questionnaire = 'TX52"
 
                 connection.query(updateFirstQuestion, function (err, result, fields) {

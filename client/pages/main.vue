@@ -325,8 +325,19 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
+    async deleteItemConfirm() {
       this.questions.splice(this.editedIndex, 1);
+      try {
+        // Suprimme la question de la bdd
+        let res = await QuestionService.deleteQuestion({
+          questionId: this.editedItem.numQuestion
+        });
+        if (res.data.hasOwnProperty("error")) {
+          // alert(res.data.error)
+          // return;
+        }
+      } catch (error) {}
+
       this.closeDelete();
     },
 
@@ -360,7 +371,7 @@ export default {
         // Ajoute la réponse à la bdd
         let res = await ResponseService.setResponse(this.formResponse);
         if (res.data.hasOwnProperty("error")) {
-          alert(res.data.error)
+          alert(res.data.error);
           return;
         }
         this.responses.push({
@@ -376,7 +387,7 @@ export default {
         // Ajoute la question à la bdd
         let res = await QuestionService.setQuestion(this.formQuestion);
         if (res.data.hasOwnProperty("error")) {
-          alert(res.data.error)
+          alert(res.data.error);
           return;
         }
         this.questions.push({
