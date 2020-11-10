@@ -218,38 +218,25 @@ function deleteQuestion(req, callback) {
     }
     else {
       console.log(result.protocol41)
-      let deleteQuestion = "DELETE FROM question " +
-                           "WHERE num_question = " + req.body.questionId
+      let deletePossede = "DELETE FROM possede " +
+                          "WHERE num_question = " + req.body.questionId
 
-      connection.query(deleteQuestion, function (err, result, fields) {
+      connection.query(deletePossede, function (err, result, fields) {
         if (err) {
           console.log(err)
           callback(err.sqlMessage, null)
         }
         else {
           console.log(result)
-          let checkFirstQuestion = "SELECT * FROM questionnaire q " +
-            "WHERE q.num_premiere_question = " + req.body.questionId + " " +
-            "AND q.nom_questionnaire = 'TX52'"
-
-          connection.query(checkFirstQuestion, function (err, result, fields) {
+          let deleteQuestion = "DELETE FROM question " +
+                               "WHERE num_question = " + req.body.questionId
+   
+          connection.query(deleteQuestion, function (err, result, fields) {
             if (err) {
               console.log(err)
               callback(err.sqlMessage, null)
             }
             else {
-              if (result.length != 0) {
-                let updateFirstQuestion = "UPDATE questionnaire q " +
-                  "SET q.num_premiere_question = null " +
-                  "WHERE q.nom_questionnaire = 'TX52"
-
-                connection.query(updateFirstQuestion, function (err, result, fields) {
-                  if (err) {
-                    console.log(err)
-                    callback(err.sqlMessage, null)
-                  }
-                })
-              }
               callback(null, result)
             }
           })
