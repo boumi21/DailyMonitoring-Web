@@ -1,5 +1,13 @@
 <template>
   <v-container>
+    <v-snackbar v-model="alertFirstQuestion" color="red darken-2">
+      Il est interdit de supprimer la question de départ
+      <template v-slot:action="{ attrs }">
+        <v-btn color="black" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-data-table
       :headers="headers"
       :items="questions"
@@ -49,7 +57,7 @@
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="headline"
-                >Sûr de suprimmer la question ?</v-card-title
+                >Supprimer la question ?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -258,6 +266,7 @@ export default {
       dialogAddResponse: false,
       dialogAddQuestion: false,
       selectedItem: 1,
+      alertFirstQuestion: false,
       headers: [
         {
           text: "Questions",
@@ -326,18 +335,18 @@ export default {
     },
 
     async deleteItemConfirm() {
-      this.questions.splice(this.editedIndex, 1);
       try {
         // Suprimme la question de la bdd
         let res = await QuestionService.deleteQuestion({
           questionId: this.editedItem.numQuestion
         });
         if (res.data.hasOwnProperty("error")) {
-          // alert(res.data.error)
-          // return;
+          this.alertFirstQuestion = true;
+          this.closeDelete();
+          return;
         }
       } catch (error) {}
-
+      this.questions.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
