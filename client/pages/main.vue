@@ -101,7 +101,7 @@
         <div>
           <v-dialog v-model="dialogAddResponse" width="1000">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+              <v-btn color="primary" dark v-bind="attrs" v-on="on">
                 Ajouter une réponse
                 <v-icon right dark>
                   mdi-plus-circle-outline
@@ -110,7 +110,7 @@
             </template>
 
             <v-card>
-              <v-card-title class="headline grey lighten-2">
+              <v-card-title class="headline primary">
                 Ajouter une réponse
               </v-card-title>
 
@@ -166,7 +166,7 @@
         <div>
           <v-dialog v-model="dialogAddQuestion" width="1000">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+              <v-btn color="primary" dark v-bind="attrs" v-on="on">
                 Ajouter une Question
                 <v-icon right dark>
                   mdi-plus-circle-outline
@@ -175,7 +175,7 @@
             </template>
 
             <v-card>
-              <v-card-title class="headline grey lighten-2">
+              <v-card-title class="headline primary">
                 Ajouter une question
               </v-card-title>
 
