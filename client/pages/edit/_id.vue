@@ -3,7 +3,11 @@
     <v-row justify="space-between">
       <v-col cols="12" md="4">
         <v-form ref="form">
-          <v-text-field v-model="form.question" label="Question"></v-text-field>
+          <v-text-field
+            outlined
+            v-model="form.question"
+            label="Question"
+          ></v-text-field>
         </v-form>
       </v-col>
       <v-col>
@@ -23,6 +27,7 @@
       v-if="form.test"
       :headers="headers"
       :items="form.responses"
+      hide-default-footer
       class="elevation-1"
     >
       <template v-slot:top>
@@ -78,7 +83,7 @@
                   Annuler
                 </v-btn>
                 <v-btn color="blue darken-1" text @click="save">
-                  Sauvegarder
+                  Ok
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -162,8 +167,8 @@ export default {
         { numResponse: null, numLiaison: null }
       ],
       headers: [
-        { text: "Réponse", align: "start", sortable: false, value: "label" },
-        { text: "Question suivante", sortable: false, value: "liaison" },
+        { text: "Réponses", align: "start", sortable: false, value: "label" },
+        { text: "Questions suivantes", sortable: false, value: "liaison" },
         { text: "Actions", value: "actions", sortable: false }
       ],
       dialog: false,

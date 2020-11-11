@@ -13,6 +13,9 @@
       :items="questions"
       sort-by="calories"
       class="elevation-1"
+      :footer-props="{
+        'items-per-page-text': 'Lignes par page:'
+      }"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -100,6 +103,9 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
                 Ajouter une réponse
+                <v-icon right dark>
+                  mdi-plus-circle-outline
+                </v-icon>
               </v-btn>
             </template>
 
@@ -162,6 +168,9 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
                 Ajouter une Question
+                <v-icon right dark>
+                  mdi-plus-circle-outline
+                </v-icon>
               </v-btn>
             </template>
 
@@ -317,12 +326,12 @@ export default {
   methods: {
     initialize() {
       this.questions = [
-        {
-          question: "Frozen Yogurt"
-        },
-        {
-          question: "Ice cream sandwich"
-        }
+        // {
+        //   question: "Frozen Yogurt"
+        // },
+        // {
+        //   question: "Ice cream sandwich"
+        // }
       ];
     },
 
